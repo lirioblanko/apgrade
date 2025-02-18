@@ -1,0 +1,40 @@
+{
+  "allTasks": [
+    {
+      "title": "утренняя прогулка в лесу",
+      "type": "physical"
+    },
+    {
+      "title": "зарядка",
+      "type": "physical"
+    },
+    {
+      "title": "контрастный ду",
+      "type": "physical"
+    },
+    {
+      "title": "планы на завтра",
+      "type": "mental"
+    },
+    {
+      "title": "задача",
+      "type": "mental"
+    },
+    {
+      "title": "аффирмации",
+      "type": "spiritual"
+    },
+    {
+      "title": "дыхательная практика",
+      "type": "spiritual"
+    },
+    {
+      "title": "задача рабочая",
+      "type": "career"
+    },
+    {
+      "title": "обучение",
+      "type": "career"
+    }
+  ]
+}
