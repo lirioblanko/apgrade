@@ -1,24 +1,32 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+// import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <header>
+<!--  <header>-->
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+<!--      <HelloWorld msg="You did it!" />-->
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/profile">Профиль</RouterLink>
-      </nav>
+    <nav>
+      <RouterLink to="/">Главная</RouterLink>
+      <RouterLink to="/profile">Профиль</RouterLink>
+    </nav>
     </div>
-  </header>
+<!--  </header>-->
 
   <RouterView />
 </template>
 
 <style scoped>
+.wrapper {
+  display: flex;
+  place-items: flex-start;
+  flex-wrap: wrap;
+  padding-top: 200px;
+  max-width: 600px;
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;
@@ -30,8 +38,12 @@ header {
 }
 
 nav {
+  position: fixed;
+  bottom: 0;
   width: 100%;
-  font-size: 12px;
+  display: flex;
+  background-color: red;
+  font-size: 14px;
   text-align: center;
   margin-top: 2rem;
 }
@@ -61,14 +73,11 @@ nav a:first-of-type {
     padding-right: calc(var(--section-gap) / 2);
   }
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
+  .wrapper {
     display: flex;
     place-items: flex-start;
     flex-wrap: wrap;
+    padding-top: 200px;
   }
 
   nav {

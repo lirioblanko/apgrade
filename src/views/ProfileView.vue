@@ -1,15 +1,16 @@
 <template>
-  <div class="about">
+  <div class="profile">
     <h1>Профиль</h1>
+
+      <AuthForm />
+
   </div>
+
 </template>
 
+<script setup lang="ts">
+import AuthForm from './../components/AuthForm.vue';
+</script>
+
 <style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
 </style>
