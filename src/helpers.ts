@@ -17,6 +17,21 @@ export function getIcon (type: TaskType)  {
   }
 }
 
+export function getTitle (type: TaskType)  {
+  switch (type) {
+    case 'physical':
+      return 'Физическая победа';
+    case 'mental':
+      return 'Ментальная победа';
+    case 'spiritual':
+      return 'Духовная победа';
+    case 'career':
+      return 'Карьерная победа';
+    default:
+      return 'Просто победа';
+  }
+}
+
 export function getDisabledDates (dates:  ComputedRef<string[]>) {
   const allDates = [];
   const startDate = new Date(2020, 0, 1);

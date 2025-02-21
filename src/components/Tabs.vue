@@ -1,22 +1,5 @@
-<script setup lang="ts">
-  import Tab from 'primevue/tab'
-  import Tabs from 'primevue/tabs'
-  import TabList from 'primevue/tablist'
-  import TabPanel from 'primevue/tabpanel'
-  import TabPanels from 'primevue/tabpanels'
-
-  import ToDoList from '@/components/ToDoList.vue'
-  import TaskList from '@/components/TaskList.vue'
-
-  defineProps<{
-    selectedDate: string
-    tasks: { heading: string; list: string[], icon: string }[]
-  }>()
-
-</script>
-
 <template>
-  <p class="mb-2 mt-2">Выбранная дата: {{ selectedDate }}</p>
+  <p class="mb-3 mt-3">Выбранная дата: {{ selectedDate }}</p>
   <div class="card">
     <Tabs value="0">
       <TabList>
@@ -29,7 +12,7 @@
           <ToDoList />
         </TabPanel>
         <TabPanel value="1">
-          <TaskList :tasks="tasks"/>
+          <TaskList />
         </TabPanel>
         <TabPanel value="2">
           <p class="m-0">Саморефлексия</p>
@@ -39,27 +22,21 @@
   </div>
 </template>
 
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  position: relative;
-  top: -10px;
-}
+<script setup lang="ts">
+  import Tab from 'primevue/tab'
+  import Tabs from 'primevue/tabs'
+  import TabList from 'primevue/tablist'
+  import TabPanel from 'primevue/tabpanel'
+  import TabPanels from 'primevue/tabpanels'
 
-h3 {
-  font-size: 1.2rem;
-}
+  import ToDoList from '@/components/ToDoList.vue'
+  import TaskList from '@/components/TaskList.vue'
 
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
+  defineProps<{
+    selectedDate: string
+  }>()
 
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
-}
+</script>
+
+<style>
 </style>
