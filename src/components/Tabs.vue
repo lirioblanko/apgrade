@@ -15,7 +15,7 @@
           <TaskList />
         </TabPanel>
         <TabPanel value="2">
-          <p class="m-0">Саморефлексия</p>
+          <p class="m-0">Извините, данный блок находится в разработке</p>
         </TabPanel>
       </TabPanels>
     </Tabs>
