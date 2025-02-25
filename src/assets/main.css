@@ -3,6 +3,6 @@
 #app {
   display: flex;
   height: 100vh;
-  max-width: 600px;
+  max-width: 400px;
   margin: 0 auto;
 }
