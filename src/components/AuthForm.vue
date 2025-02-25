@@ -1,6 +1,6 @@
 <template>
-  <Form v-slot="$form" :initial-values="initialValues" :resolver="resolver" @submit="onSubmit" class="flex flex-column gap-2 w-full sm:w-56">
-    <div class="flex flex-column">
+  <Form v-slot="$form" :initialValues :resolver @submit="onSubmit" class="flex flex-column gap-2 w-full sm:w-56" >
+    <div class="flex flex-column gap-1">
       <FloatLabel variant="in">
         <InputText name="username" type="text"  fluid />
         <label class="text-xs" for="username">Логин</label>
@@ -74,4 +74,7 @@
 </script>
 
 <style>
+.profile {
+  width: 100%
+}
 </style>

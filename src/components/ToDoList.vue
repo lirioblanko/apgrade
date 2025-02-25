@@ -60,5 +60,6 @@ const selectedCategories = computed(() => allTasksByDate.value.filter(task => ta
 <style>
   .card {
     gap: 2rem;
+    margin-bottom: 4rem;
   }
 </style>
