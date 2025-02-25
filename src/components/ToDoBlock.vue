@@ -1,16 +1,23 @@
 <template>
-  <div>
+  <div class="flex flex-column gap-2 ">
     <h3 class="mb-4">{{ title }} {{ tasks.length }}</h3>
-    <div v-for="task of localTasks" :key="task.id" class="flex items-center gap-2">
-      <Chip class="chip" :icon="`pi ${task.icon}`" />
-      <Checkbox
-        v-model="localSelectedCategories"
-        name="task"
-        :inputId="task.id"
-        :value="task.id"
-        @change="onChange"
-      />
-      <label :for="task.id">{{ task.title }}</label>
+    <div v-for="task of localTasks" :key="task.id"  class="flex justify-content-between task" >
+      <div class="flex items-center gap-2">
+        <Chip class="chip" :icon="`pi ${task.icon}`" />
+        <Checkbox
+          v-model="localSelectedCategories"
+          name="task"
+          :inputId="task.id"
+          :value="task.id"
+          @change="onChange"
+        />
+        <label :for="task.id">{{ task.title }}</label>
+      </div>
+      <div class="flex items-center gap-4">
+        <i :class="`pi pi-file-edit delete`" style="font-size: 1rem" @click="toggleModal(true, 'Редактирование задачи', 'Редактировать', task)" />
+<!--      todo: прикрепить модальное окно с подтверждением выбора удаления-->
+      <i :class="`pi pi-trash delete`" style="font-size: 1rem" @click="tasksStore.fetchDeleteTask(task.id)" />
+        </div>
     </div>
   </div>
 </template>
@@ -28,6 +35,7 @@
     title: string;
     tasks: TaskFullProps[];
     selectedCategories: string[];
+    toggleModal: (value: boolean, headerName: string, buttonName: string, task: TaskFullProps) => void;
   }>();
 
   const localSelectedCategories = ref([...props.selectedCategories]);
@@ -64,6 +72,16 @@
 }
 
 .chip .pi {
+  color: #34d399;
+}
+
+.delete {
+  cursor: pointer;
+  align-content: center;
+}
+
+.task:hover {
+  opacity: 0.5;
   color: #34d399;
 }
 </style>

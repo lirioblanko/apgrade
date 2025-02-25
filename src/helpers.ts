@@ -20,15 +20,15 @@ export function getIcon (type: TaskType)  {
 export function getTitle (type: TaskType)  {
   switch (type) {
     case 'physical':
-      return 'Физическая победа';
+      return 'Физическая';
     case 'mental':
-      return 'Ментальная победа';
+      return 'Ментальная';
     case 'spiritual':
-      return 'Духовная победа';
+      return 'Духовная';
     case 'career':
-      return 'Карьерная победа';
+      return 'Карьерная';
     default:
-      return 'Просто победа';
+      return 'Просто';
   }
 }
 

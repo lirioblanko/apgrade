@@ -5,7 +5,7 @@
           <InputText name="task" type="text" placeholder="Задача" fluid />
           <Message v-if="$form.task?.invalid" severity="error" size="small" variant="simple">{{ $form.task.error?.message }}</Message>
         </div>
-        <DatePicker v-model="icondisplay" name="date" showIcon fluid iconDisplay="input"  />
+        <DatePicker v-model="initialValues.date" name="date" showIcon fluid iconDisplay="input"  />
         <div class="flex flex-column gap-1">
           <Select name="type" :options="typesOfTasks" optionLabel="name" placeholder="Тип задачи" fluid />
           <Message v-if="$form.type?.invalid" severity="error" size="small" variant="simple">{{ $form.type.error.message }}</Message>
@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { defineProps, ref, watch } from 'vue'
 import Dialog from "primevue/dialog";
 import { Form, type FormSubmitEvent } from '@primevue/forms'
 import InputText from "primevue/inputtext";
@@ -27,22 +27,41 @@ import Select from 'primevue/select';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import {  z } from 'zod'
 import { type BaseFormProps, convertTask } from '@/converts.ts'
+import type { TasksProps } from '@/store/tasks.ts'
+import { getTitle } from '@/helpers.ts'
 
-const icondisplay = ref();
+const emit = defineEmits(['formSubmit']);
 const visible = ref(false);
 const resetForm = ref(false);
-const emit = defineEmits(['formSubmit']);
-
-defineProps({
-  toggleModal: Function,
-  buttonText: String,
-  header: String,
-})
-
 const initialValues = ref({
   task: '',
   date: new Date(),
-  type: { code: '' },
+  type: {name: '', code: '' },
+});
+
+const props = defineProps<{
+  buttonText: string,
+  header: string,
+  selectedTask?: TasksProps
+}>();
+
+const localSelectedTask = ref<TasksProps | undefined>(props.selectedTask);
+
+watch(() => props.selectedTask, (newVal?: TasksProps) => {
+  if (newVal) {
+    localSelectedTask.value = { ...newVal };
+    initialValues.value.task = newVal.title || '';
+    const dateParts = newVal.date.split('.');
+    const formattedDate = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+    initialValues.value.date = newVal.date ? formattedDate : new Date();
+    initialValues.value.type = { name: getTitle(newVal.type), code: newVal.type || '' };
+  } else {
+    initialValues.value = {
+      task: '',
+      date: new Date(),
+      type: { name: '', code: '' },
+    };
+  }
 });
 
 const resolver = ref(zodResolver(
@@ -68,10 +87,14 @@ const typesOfTasks = ref([
 
 const onFormSubmit = (event: FormSubmitEvent) => {
   const { valid, values, reset } = event;
+  const formatValues = !localSelectedTask.value ? convertTask(values as BaseFormProps) : {...convertTask(values as BaseFormProps), id: localSelectedTask.value.id, isComplete: localSelectedTask.value.isComplete} ;
+
   if (valid) {
-    emit('formSubmit', convertTask(values as BaseFormProps));
-    reset();
-    resetForm.value = !resetForm.value;
+    emit('formSubmit', formatValues);
+    if (!!localSelectedTask.value) {
+      reset();
+      resetForm.value = !resetForm.value;
+    }
   }
 };
 </script>
