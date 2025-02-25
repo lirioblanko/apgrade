@@ -5,6 +5,7 @@ import { apiService } from '@/api/api.ts'
 
 import { format } from 'date-fns';
 import { getIcon } from '@/helpers.ts'
+import { v4 as uuidv4 } from 'uuid';
 export type TaskType = 'physical' | 'mental' | 'spiritual' | 'career';
 
 export interface TasksProps {
@@ -20,16 +21,16 @@ export interface TaskFullProps extends TasksProps {
 }
 
 export const useTasksStore = defineStore('tasks', () => {
-  const isLoadingTasks = ref(true);
-  const allTasks= ref<TasksProps[]>([])
-  const allTasksByDate= ref<TasksProps[]>([])
-  const otherTasks: ComputedRef<TaskFullProps[]>= computed(() => allTasks.value
+  const isLoadingTasks = ref(true); //локально нет смысла использовать
+  const allTasks = ref<TasksProps[]>([])
+  const allTasksByDate = ref<TasksProps[]>([])
+  const otherTasks: ComputedRef<TaskFullProps[]> = computed(() => allTasks.value
     .filter((task: TasksProps) => task.date !== formattedDate.value)
     .map(task => ({
-    ...task,
-    icon: getIcon(task.type),
-  })))
-  const doneTasksByDate: Ref<TasksProps[]>= ref<TasksProps[]>([])
+      ...task,
+      icon: getIcon(task.type),
+    })))
+  const doneTasksByDate: Ref<TasksProps[]> = ref<TasksProps[]>([])
   const selectedDate = ref(new Date());
   const formattedDate = computed(() => format(selectedDate.value, 'dd.MM.yyyy'));
   const activeDates = computed(() => [...new Set(allTasks.value.map(task => task.date))])
@@ -41,9 +42,9 @@ export const useTasksStore = defineStore('tasks', () => {
       if (data) {
         allTasks.value = [...data];
       }
-    } catch (error){
+    } catch (error) {
       console.log(error)
-      // toastInfo(`Ошибка при получении товаров: ${error}`, 'error' )
+      // toastInfo(`Произошла ошибка: ${error}`, 'error' )
     }
     isLoadingTasks.value = false;
   }
@@ -52,57 +53,86 @@ export const useTasksStore = defineStore('tasks', () => {
     try {
       const data: TasksProps[] = await apiService.getTasksByDate(formattedDate.value);
       if (data) {
-        allTasksByDate.value = [ ...data];
-
+        allTasksByDate.value = [...data];
       }
-    } catch (error){
+    } catch (error) {
       console.log(error)
-      // toastInfo(`Ошибка при получении товаров: ${error}`, 'error' )
+      // toastInfo(`Произошла ошибка: ${error}`, 'error' )
     }
-    // isLoadingTasks.value = false;
   }
 
   async function fetchTasksByDone() {
     try {
       const data: TasksProps[] = await apiService.getTasksByDone(formattedDate.value);
       if (data) {
-        doneTasksByDate.value = [ ...data];
+        doneTasksByDate.value = [...data];
       }
-    } catch (error){
+    } catch (error) {
       console.log(error)
-      // toastInfo(`Ошибка при получении товаров: ${error}`, 'error' )
+      // toastInfo(`Произошла ошибка: ${error}`, 'error' )
     }
-    // isLoadingTasks.value = false;
   }
 
   async function fetchNewTask(task: TasksProps) {
     try {
-      const response = await apiService.postNewTask({...task, id: String(allTasks.value.length+1) });
-      console.log(`ответ: ${response.data}`)
-      fetchTasks();
-      fetchTasksByDate();
-      // toastInfo(`Заказ успешно оформлен`, 'success' )
+      await apiService.postNewTask({ ...task, id: uuidv4() });
+      await Promise.all([
+        fetchTasks(),
+        fetchTasksByDate()
+      ]);
+      // toastInfo(`Задача успешно создана`, 'success' )
     } catch (error) {
       console.log(error)
-      // toastInfo(`Ошибка при отправке: ${error}`, 'error' )
+      // toastInfo(`Произошла ошибка: ${error}`, 'error' )
     }
   }
 
   async function fetchUpdateTask(task: TasksProps) {
     // console.log({...task, id: allTasks.value.length })
     try {
-      const response = await apiService.putUpdateTask({...task });
-      console.log(`ответ: ${response.data}`)
-      fetchTasks();
-      fetchTasksByDate();
-      fetchTasksByDone();
+      await apiService.putUpdateTask({ ...task });
+      await Promise.all([
+        fetchTasks(),
+        fetchTasksByDate(),
+        fetchTasksByDone()
+      ]);
       // toastInfo(`Заказ успешно оформлен`, 'success' )
     } catch (error) {
       console.log(error)
-      // toastInfo(`Ошибка при отправке: ${error}`, 'error' )
+      // toastInfo(`Произошла ошибка: ${error}`, 'error' )
     }
   }
 
+  async function fetchDeleteTask(id: string) {
+    // console.log({...task, id: allTasks.value.length })
+    try {
+      await apiService.deleteTask(id);
+      await Promise.all([
+        fetchTasks(),
+        fetchTasksByDate(),
+        fetchTasksByDone()
+      ]);
+      // toastInfo(`Задача успешно удалена`, 'success' )
+    } catch (error) {
+      console.log(error)
+      // toastInfo(`Произошла ошибка: ${error}`, 'error' )
+    }
+  }
 
-  return {isLoadingTasks, selectedDate, otherTasks, doneTasksByDate, fetchNewTask, fetchUpdateTask, fetchTasksByDone, activeDates, formattedDate, allTasks, allTasksByDate, fetchTasks, fetchTasksByDate }
+  return {
+    isLoadingTasks,
+    allTasks,
+    allTasksByDate,
+    otherTasks,
+    activeDates,
+    selectedDate,
+    formattedDate,
+    doneTasksByDate,
+    fetchTasks,
+    fetchTasksByDate,
+    fetchTasksByDone,
+    fetchNewTask,
+    fetchUpdateTask,
+    fetchDeleteTask,
+  }
 })
