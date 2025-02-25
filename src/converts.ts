@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import type { TaskType } from '@/store/tasks.ts'
 
-interface BaseFormProps {
+export interface BaseFormProps {
   type: {
     code: TaskType
   },

@@ -2,6 +2,7 @@
   <main class="w-full">
     <DatePicker v-model="selectedDate" :disabledDates="disabledDates" inline class="w-full" @update:modelValue="() => { tasksStore.fetchTasksByDate(); tasksStore.fetchTasksByDone(); }" />
     <Tabs :selectedDate="formattedDate" />
+    <Toast />
   </main>
 </template>
 
@@ -36,7 +37,6 @@
  }
 
  .p-datepicker-today > .p-datepicker-day {
-   background-color: #34d399;
-   opacity: 0.3
+   background-color: #B0DFCE;
  }
 </style>

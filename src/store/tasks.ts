@@ -1,8 +1,7 @@
 import { ref, computed, type ComputedRef, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import { apiService } from '@/api/api.ts'
-// import { useToastLogic } from "../scripts/hooks/useToast.js";
-
+import { useToastLogic } from "@/hooks/useToast.ts";
 import { format } from 'date-fns';
 import { getIcon } from '@/helpers.ts'
 import { v4 as uuidv4 } from 'uuid';
@@ -35,6 +34,7 @@ export const useTasksStore = defineStore('tasks', () => {
   const formattedDate = computed(() => format(selectedDate.value, 'dd.MM.yyyy'));
   const activeDates = computed(() => [...new Set(allTasks.value.map(task => task.date))])
 
+  const { toastInfo } = useToastLogic()
 
   async function fetchTasks() {
     try {
@@ -43,8 +43,7 @@ export const useTasksStore = defineStore('tasks', () => {
         allTasks.value = [...data];
       }
     } catch (error) {
-      console.log(error)
-      // toastInfo(`Произошла ошибка: ${error}`, 'error' )
+      toastInfo(`Произошла ошибка: ${error}`, 'error' )
     }
     isLoadingTasks.value = false;
   }
@@ -56,8 +55,7 @@ export const useTasksStore = defineStore('tasks', () => {
         allTasksByDate.value = [...data];
       }
     } catch (error) {
-      console.log(error)
-      // toastInfo(`Произошла ошибка: ${error}`, 'error' )
+      toastInfo(`Произошла ошибка: ${error}`, 'error' )
     }
   }
 
@@ -68,8 +66,7 @@ export const useTasksStore = defineStore('tasks', () => {
         doneTasksByDate.value = [...data];
       }
     } catch (error) {
-      console.log(error)
-      // toastInfo(`Произошла ошибка: ${error}`, 'error' )
+      toastInfo(`Произошла ошибка: ${error}`, 'error' )
     }
   }
 
@@ -80,15 +77,13 @@ export const useTasksStore = defineStore('tasks', () => {
         fetchTasks(),
         fetchTasksByDate()
       ]);
-      // toastInfo(`Задача успешно создана`, 'success' )
+      toastInfo(`Задача успешно создана`, 'success' )
     } catch (error) {
-      console.log(error)
-      // toastInfo(`Произошла ошибка: ${error}`, 'error' )
+      toastInfo(`Произошла ошибка: ${error}`, 'error' )
     }
   }
 
   async function fetchUpdateTask(task: TasksProps) {
-    // console.log({...task, id: allTasks.value.length })
     try {
       await apiService.putUpdateTask({ ...task });
       await Promise.all([
@@ -96,15 +91,13 @@ export const useTasksStore = defineStore('tasks', () => {
         fetchTasksByDate(),
         fetchTasksByDone()
       ]);
-      // toastInfo(`Заказ успешно оформлен`, 'success' )
+      toastInfo(`Заказ успешно оформлен`, 'success' )
     } catch (error) {
-      console.log(error)
-      // toastInfo(`Произошла ошибка: ${error}`, 'error' )
+      toastInfo(`Произошла ошибка: ${error}`, 'error' )
     }
   }
 
   async function fetchDeleteTask(id: string) {
-    // console.log({...task, id: allTasks.value.length })
     try {
       await apiService.deleteTask(id);
       await Promise.all([
@@ -112,10 +105,9 @@ export const useTasksStore = defineStore('tasks', () => {
         fetchTasksByDate(),
         fetchTasksByDone()
       ]);
-      // toastInfo(`Задача успешно удалена`, 'success' )
+      toastInfo(`Задача успешно удалена`, 'success' )
     } catch (error) {
-      console.log(error)
-      // toastInfo(`Произошла ошибка: ${error}`, 'error' )
+      toastInfo(`Произошла ошибка: ${error}`, 'error' )
     }
   }
 
