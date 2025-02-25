@@ -43,7 +43,7 @@ export const useTasksStore = defineStore('tasks', () => {
         allTasks.value = [...data];
       }
     } catch (error) {
-      toastInfo(`Произошла ошибка: ${error}`, 'error' )
+      toastInfo(`Произошла ошибка при получении задач: ${error}`, 'error' )
     }
     isLoadingTasks.value = false;
   }
@@ -55,7 +55,7 @@ export const useTasksStore = defineStore('tasks', () => {
         allTasksByDate.value = [...data];
       }
     } catch (error) {
-      toastInfo(`Произошла ошибка: ${error}`, 'error' )
+      toastInfo(`Произошла ошибка при получении задач за день: ${error}`, 'error' )
     }
   }
 
@@ -91,7 +91,6 @@ export const useTasksStore = defineStore('tasks', () => {
         fetchTasksByDate(),
         fetchTasksByDone()
       ]);
-      toastInfo(`Заказ успешно оформлен`, 'success' )
     } catch (error) {
       toastInfo(`Произошла ошибка: ${error}`, 'error' )
     }
