@@ -36,7 +36,6 @@ const result = computed<TaskItem[]>(() =>
   Object.values(
     doneTasksByDate.value.reduce((acc: Record<string, TaskItem>, task: TasksProps) => {
       if (!acc[task.type]) {
-        console.log(acc[task.type])
         acc[task.type] = { heading: getTitle(task.type), list: [], icon: getIcon(task.type) }
       }
       acc[task.type].list.push(task.title)

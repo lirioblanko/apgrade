@@ -1,28 +1,32 @@
 <template>
   <div class="card flex flex-column justify-center">
+    <Button type="button" outlined label="Новая задача" @click="toggleModal(true, 'Создание новой задачи', 'Добавить')" />
+    <ModalTask  v-model:visible="isVisibleModal" :header="headerModal" :buttonText="buttonModal" @formSubmit="onFormSubmit"/>
     <ToDoBlock title="Запланированные задачи:" :tasks="tasks" :selectedCategories="selectedCategories"/>
-    <ToDoBlock title="Другие задачи:" :tasks="otherTasks" :selectedCategories="selectedCategories"/>
-<!--    <h3 class="mb-4">Запланированные задачи: {{ tasks.length }}</h3>-->
-<!--    <div v-for="task of tasks" :key="task.id" class="flex items-center gap-2">-->
-<!--      <Chip class="chip" :icon="`pi ${task.icon}`" />-->
-<!--      <Checkbox v-model="selectedCategories" :inputId="task.id" name="category" :value="task.title" />-->
-<!--      <label :for="task.id">{{ task.title }}</label>-->
-<!--    </div>-->
+    <ToDoBlock title="Другие задачи:" :tasks="otherTasks" :selectedCategories="otherSelectedCategories"/>
   </div>
 </template>
 
 <script setup lang="ts">
   import ToDoBlock from '../components/ToDoBlock.vue'
-  import { computed, onMounted } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
   import { storeToRefs } from 'pinia'
-  import { useTasksStore } from '../store/tasks.ts'
-  // import Checkbox from 'primevue/checkbox';
-  // import Chip from 'primevue/chip';
+  import { type TasksProps, useTasksStore } from '../store/tasks.ts'
   import { getIcon } from '@/helpers.ts'
 
+  import ModalTask from '@/components/ModalTask.vue'
+  import Button from 'primevue/button'
   const tasksStore = useTasksStore();
   const { allTasksByDate, otherTasks } = storeToRefs(tasksStore);
+  const isVisibleModal = ref(false);
+  const headerModal = ref('');
+  const buttonModal = ref('');
 
+  function toggleModal(value: boolean, headerName: string, buttonName: string) {
+    isVisibleModal.value = value;
+    headerModal.value = headerName;
+    buttonModal.value = buttonName;
+  }
   onMounted(() => {
     tasksStore.fetchTasks()
     tasksStore.fetchTasksByDate()
@@ -33,7 +37,18 @@ const tasks = computed(() => allTasksByDate.value.map(task => ({
     icon: getIcon(task.type),
 })));
 
-const selectedCategories = computed(() => allTasksByDate.value.filter(task => task.isComplete).map(task => task.title));
+const selectedCategories = computed(() => allTasksByDate.value.filter(task => task.isComplete).map(task => {
+  return task.id
+}));
+  const otherSelectedCategories = computed(() => otherTasks.value.filter(task => task.isComplete).map(task => {
+    return task.id
+  }));
+
+  const onFormSubmit = async (values: TasksProps) => {
+    await tasksStore.fetchNewTask(values); // Вызываем функцию из store
+    // toast.add({ severity: 'success', summary: 'Form is submitted.', life: 3000 });
+  };
+
 
 </script>
 
