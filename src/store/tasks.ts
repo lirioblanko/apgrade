@@ -24,7 +24,7 @@ export const useTasksStore = defineStore('tasks', () => {
   const allTasks = ref<TasksProps[]>([])
   const allTasksByDate = ref<TasksProps[]>([])
   const otherTasks: ComputedRef<TaskFullProps[]> = computed(() => allTasks.value
-    .filter((task: TasksProps) => task.date !== formattedDate.value)
+    .filter((task: TasksProps) => task.date !== formattedDate.value && !task.isComplete)
     .map(task => ({
       ...task,
       icon: getIcon(task.type),
