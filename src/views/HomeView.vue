@@ -1,6 +1,11 @@
 <template>
   <main class="w-full">
-    <DatePicker v-model="selectedDate" :disabledDates="disabledDates" inline class="w-full" @update:modelValue="() => { tasksStore.fetchTasksByDate(); tasksStore.fetchTasksByDone(); }" />
+    <DatePicker
+      v-model="selectedDate"
+      :disabledDates="disabledDates"
+      inline class="w-full"
+      @update:modelValue="() => { tasksStore.fetchTasksByDate(); tasksStore.fetchTasksByDone() }"
+    />
     <Tabs :selectedDate="formattedDate" />
     <Toast />
   </main>

@@ -24,7 +24,7 @@ export const useTasksStore = defineStore('tasks', () => {
   const allTasks = ref<TasksProps[]>([])
   const allTasksByDate = ref<TasksProps[]>([])
   const otherTasks: ComputedRef<TaskFullProps[]> = computed(() => allTasks.value
-    .filter((task: TasksProps) => task.date !== formattedDate.value)
+    .filter((task: TasksProps) => task.date !== formattedDate.value && !task.isComplete)
     .map(task => ({
       ...task,
       icon: getIcon(task.type),
@@ -52,6 +52,7 @@ export const useTasksStore = defineStore('tasks', () => {
     try {
       const data: TasksProps[] = await apiService.getTasksByDate(formattedDate.value);
       if (data) {
+        data.sort((a, b) => (a.isComplete === b.isComplete) ? 0 : a.isComplete ? 1 : -1);
         allTasksByDate.value = [...data];
       }
     } catch (error) {

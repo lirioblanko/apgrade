@@ -24,7 +24,7 @@ import { RouterLink, RouterView } from 'vue-router'
   background-color: var(--vt-c-black);
 }
 nav {
-  width: 400px;
+  width: 600px;
   margin: 0 auto;
   display: flex;
   font-size: 1rem;
